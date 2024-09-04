@@ -22,5 +22,9 @@ class DatabaseSeeder extends Seeder
                 'featured' => $sequence->index % 3 === 0
             ]))
             ->create();
+
+        User::factory()->create([
+            'email' => 'example@gmail.com'
+        ]);
     }
 }
