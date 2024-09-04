@@ -8,6 +8,13 @@ use App\Factories\CartFactory;
 class Cart extends Component
 {
 
+    public function delete($itemId)
+    {
+        CartFactory::make()->items()->where('id', $itemId)->delete();
+
+        $this->dispatch('productRemovedFromCart');
+    }
+
     public function getItemsProperty()
     {
         return CartFactory::make()->items;
