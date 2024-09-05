@@ -5,6 +5,7 @@ namespace App\Providers;
 use Money\Money;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Laravel\Cashier\Cashier;
 use Laravel\Fortify\Fortify;
 use App\Factories\CartFactory;
 use Money\Currencies\ISOCurrencies;
@@ -31,6 +32,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Model::unguard();
+        Cashier::calculateTaxes();
+
 
 
         Fortify::authenticateUsing(function (Request $request) {
