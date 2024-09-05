@@ -8,29 +8,37 @@ use App\Factories\CartFactory;
 class Cart extends Component
 {
 
+    public function getCartProperty()
+    {
+        return CartFactory::make()->loadMissing(['items', 'items.product', 'items.variant']);
+    }
+
     public function delete($itemId)
     {
-        CartFactory::make()->items()->where('id', $itemId)->delete();
+        $this->cart->items()->where('id', $itemId)->delete();
 
         $this->dispatch('productRemovedFromCart');
     }
 
     public function getItemsProperty()
     {
-        return CartFactory::make()->items;
+        return $this->cart->items;
     }
 
     public function increment($itemId)
     {
-        CartFactory::make()->items()->find($itemId)?->increment('quantity');
+        $this->cart->items()->find($itemId)?->increment('quantity');
+
+        $this->dispatch('productAddedToCart');
     }
 
     public function decrement($itemId)
     {
-        $item = CartFactory::make()->items()->find($itemId);
+        $item = $this->cart->items()->find($itemId);
 
         if ($item->quantity > 1) {
             $item->decrement('quantity');
+            $this->dispatch('productRemovedFromCart');
         }
     }
 
