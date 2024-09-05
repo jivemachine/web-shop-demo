@@ -6,12 +6,14 @@ use Money\Money;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Laravel\Fortify\Fortify;
+use App\Factories\CartFactory;
 use Money\Currencies\ISOCurrencies;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
 use Money\Formatter\IntlMoneyFormatter;
+use App\Actions\Webshop\MigrateSessionCart;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -35,6 +37,7 @@ class AppServiceProvider extends ServiceProvider
             $user = User::where('email', $request->email)->first();
 
             if ($user && Hash::check($request->password, $user->password)) {
+                (new MigrateSessionCart)->migrate(CartFactory::make(), $user->cart ?: $user->cart());
                 return $user;
             }
         });
