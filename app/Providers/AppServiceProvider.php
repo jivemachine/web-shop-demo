@@ -3,7 +3,11 @@
 namespace App\Providers;
 
 use Money\Money;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Laravel\Fortify\Fortify;
 use Money\Currencies\ISOCurrencies;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
@@ -25,6 +29,16 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Model::unguard();
+
+
+        Fortify::authenticateUsing(function (Request $request) {
+            $user = User::where('email', $request->email)->first();
+
+            if ($user && Hash::check($request->password, $user->password)) {
+                return $user;
+            }
+        });
+
 
         Blade::stringable(function (Money $money) {
             $currencies = new ISOCurrencies();
