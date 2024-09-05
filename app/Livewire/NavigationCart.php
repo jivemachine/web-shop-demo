@@ -11,6 +11,8 @@ class NavigationCart extends Component
     public $listeners = [
         'productAddedToCart' => '$refresh',
         'productRemovedFromCart' => '$refresh',
+        'decrementQuantity' => '$refresh',
+        'incrementQuantity' => '$refresh',
     ];
 
     public function getCountProperty()
