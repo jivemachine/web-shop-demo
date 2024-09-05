@@ -21,7 +21,7 @@
                         <td>{{ $item->variant->size }} </td>
                         <td>{{ $item->variant->color }}</td>
                         <td class="flex items-center">
-                            <button wire:click="decrement({{ $item->id }})" @disabled($item->quantity == 1)>
+                            <button wire:click.debounce.250ms="decrement({{ $item->id }})" @disabled($item->quantity == 1)>
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
                                     class="size-4">
                                     <path fill-rule="evenodd"
@@ -32,7 +32,7 @@
                             <div>
                                 {{ $item->quantity }}
                             </div>
-                            <button wire:click="increment({{ $item->id }})">
+                            <button wire:click.debounce.250ms="increment({{ $item->id }})">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
                                     class="size-4">
                                     <path
