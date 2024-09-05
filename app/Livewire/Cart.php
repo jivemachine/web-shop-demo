@@ -27,19 +27,29 @@ class Cart extends Component
 
     public function increment($itemId)
     {
-        $this->cart->items()->find($itemId)?->increment('quantity');
+        $item = $this->cart->items()->find($itemId);
 
-        $this->dispatch('productAddedToCart');
+        if ($item) {
+            $item->increment('quantity');
+            $item->refresh();
+
+            $this->dispatch('incrementQuantity');
+        }
+
+        $this->cart = $this->cart->fresh();
     }
 
     public function decrement($itemId)
     {
         $item = $this->cart->items()->find($itemId);
 
-        if ($item->quantity > 1) {
+        if ($item && $item->quantity > 1) {
             $item->decrement('quantity');
-            $this->dispatch('productRemovedFromCart');
+            $item->refresh();
+
+            $this->dispatch('decrementQuantity');
         }
+        $this->cart = $this->cart->fresh();
     }
 
     public function render()
