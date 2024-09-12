@@ -39,7 +39,7 @@ class AppServiceProvider extends ServiceProvider
             $user = User::where('email', $request->email)->first();
 
             if ($user && Hash::check($request->password, $user->password)) {
-                (new MigrateSessionCart)->migrate(CartFactory::make(), $user->cart ?: $user->cart());
+                (new MigrateSessionCart)->migrate(CartFactory::make(), $user->cart()->firstOrCreate());
                 return $user;
             }
         });
